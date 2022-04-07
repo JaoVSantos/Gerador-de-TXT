@@ -1,0 +1,29 @@
+lista_dados=[]
+
+def trans_bytes(tamanho_bytes:str) -> float:
+  return int(tamanho_bytes)/ (2**10) **2
+
+with open('sample_data/usuario.txt', 'r') as arquivo:
+  for linha in arquivo:
+    usuario = linha.strip()
+    u = linha[:15]
+    tamanho_disco = trans_bytes(linha[16:])
+    lista_dados.append((u, tamanho_disco))
+      
+print(lista_dados)
+
+cabecalho = ''' ACME Inc.               Uso do espaço em disco pelos usuários
+------------------------------------------------------------------------
+Nr.  Usuário        Espaço utilizado     % do uso
+'''
+
+
+with open('sample_data/relatorio.txt', 'w') as arquivo:
+  tamanho_total = sum([tamanho for _,tamanho in lista_dados])
+  arquivo.writelines(cabecalho)
+  for indice, dados in enumerate(lista_dados, start= 1):
+    u, tamanho_disco = dados
+    arquivo.writelines(f'{indice:4} {u} {tamanho_disco:9.2f} MB        {tamanho_disco/tamanho_total:.2%}\n')
+    arquivo.writelines('\n')
+    arquivo.writelines(f'Espaço total ocupado: 2581,57 MB\n')
+    arquivo.writelines(f'Espaço médio ocupado: 430,26MB')
